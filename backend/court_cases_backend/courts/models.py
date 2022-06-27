@@ -49,7 +49,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
 class CustomUser(AbstractBaseUser):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
     surename = models.CharField(max_length=255)
     patronymic = models.CharField(max_length=255)
