@@ -2,8 +2,9 @@ from dataclasses import fields
 from django.conf import settings
 
 from rest_framework import serializers
+from .models import CustomUser
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = settings.AUTH_USER_MODEL
-        fields = ['__all__']
+        model = CustomUser
+        fields = ['id', 'email', 'name', 'surename', 'patronymic']
