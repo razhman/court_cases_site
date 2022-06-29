@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from .models import CustomUser
+from .models import CourtCases, CourtFirstInstance, CourtSecondInstance, CourtThirdInstance, CustomUser, NotifyTask
 
 class UserAdmin(BaseUserAdmin):   
     # отображение
@@ -37,3 +37,8 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(CustomUser, UserAdmin)
 admin.site.unregister(Group)
+admin.site.register(CourtCases)
+admin.site.register(NotifyTask)
+admin.site.register(CourtFirstInstance)
+admin.site.register(CourtSecondInstance)
+admin.site.register(CourtThirdInstance)
