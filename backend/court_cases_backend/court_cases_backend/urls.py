@@ -20,6 +20,7 @@ import courts.views as views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.CustomUserViewSet)
+router.register(r'court_cases', views.CourtCasesViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

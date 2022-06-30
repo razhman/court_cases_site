@@ -1,4 +1,5 @@
-from re import M
+from ensurepip import version
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
@@ -50,6 +51,13 @@ class CustomUserManager(BaseUserManager):
         return user
 
 class CustomUser(AbstractBaseUser):
+    
+    
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255)
     surename = models.CharField(max_length=255)
@@ -87,63 +95,67 @@ class CustomUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-# Courts classes
-
 class CourtCases(models.Model):
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    number_of_court = models.IntegerField()
-    case_source_and_summ = models.CharField(max_length=255)
-    case_purpose = models.CharField(max_length=255)
-    claim = models.CharField(max_length=255)
-    number_case_in_first_instance = models.CharField(max_length=255, blank=True)
-    number_case_in_numenklature = models.CharField(max_length=255, blank=True)
-    date_of_appeal = models.CharField(max_length=255, blank=True) 
-    date_of_submission_appeal = models.CharField(max_length=255, blank=True)
-    total_amount_recovered = models.CharField(max_length=255, blank=True)
-    information_about_need_recourse = models.CharField(max_length=255, blank=True)
-    summary_of_court =  models.CharField(max_length=255, blank=True)
 
+
+    class Meta:
+        verbose_name = 'Судебное дело'
+        verbose_name_plural = 'Судебные дела'
+
+
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    number_of_court = models.FloatField(verbose_name='Номер дела')
+    case_source_and_summ = models.CharField(max_length=255, verbose_name='Кем заявлены требования и (сумма заявленных требований)')
+    case_purpose = models.CharField(max_length=255, verbose_name='К кому заявлены требования + (3 лицо)')
+    claim = models.CharField(max_length=255, verbose_name='Исковые требования')
+    number_case_in_first_instance = models.CharField(max_length=255, blank=True, verbose_name='N дела в суде первой инстанции')
+    number_case_in_numenklature = models.CharField(max_length=255, blank=True, verbose_name='N дела по внутренней номенклатуре')
+
+    # Первая инстанция
+    fstinst_dates_of_court_hearing = models.JSONField(blank=True, verbose_name='Даты судебных заседаний')
+    fstinst_date_of_dicision = models.DateField(blank=True, null=True, verbose_name='Дата вынесения решения(только дата)')
+    fstinst_brief_operative_part = models.TextField(blank=True, verbose_name='Краткая резолютивная часть судебного акта')
+    fstinst_minfin_information = models.CharField(max_length=255, blank=True, 
+    verbose_name='Информация о направлении справки по делу в ФК или Минфин V –отправлена, дата отправления и № письма, X – не требуется')
+    fstinst_date_of_filing_in_court = models.DateField(blank=True, null=True, verbose_name='Дата направления заявления в суд на выдачу судебного акта.')
+    fstinst_date_of_receipt_of_judgment = models.DateField(blank=True, null=True, verbose_name='Дата получения судебного решения')
+    fstinst_date_appeal_by_the_parties = models.DateField(blank=True, null=True, verbose_name='Дата направления апелляционной жалобы сторонам по делу')
+    fstinst_date_appeal_to_the_court = models.DateField(blank=True, null=True, verbose_name='Дата направления апелляционной жалобы в суд')
+    # Вторая инстанция
+    sndinst_dates_of_court_hearing = models.JSONField(blank=True, verbose_name='Даты судебных заседаний')
+    sndinst_date_of_dicision = models.DateField(blank=True, null=True, verbose_name='Дата вынесения апелляционного определения')
+    sndinst_brief_operative_part = models.TextField(blank=True, verbose_name='Краткая резолютивная часть судебного акта')
+    sndinst_minfin_information = models.CharField(max_length=255, blank=True, 
+    verbose_name='Информация о направлении справки по делу в ФК или Минфин V –отправлена, дата отправления и № письма, Х – не требуется')
+    sndinst_date_of_filing_in_court = models.DateField(blank=True, null=True, verbose_name='Дата направления заявления в суд на выдачу судебных актов.')
+    sndinst_date_of_receipt_of_judgment = models.DateField(blank=True, null=True, verbose_name='Дата получения судебных актов вступивших в законную силу')
+    sndinst_date_appeal_by_the_parties = models.DateField(blank=True, null=True, verbose_name='Дата направления кассационной жалобы (Х - не требуется) сторонами по делу')
+    sndinst_date_appeal_to_the_court = models.DateField(blank=True, null=True, verbose_name='Дата направления кассационной жалобы (Х - не требуется) в суд')
+
+    # Третья инстанция
+    thrinst_date_of_judgment = models.DateField(blank=True, null=True, verbose_name='Дата выынесения судебного акта  или дата рассмотрения (только дата)')
+    thrinst_brief_operative_part = models.TextField(blank=True, verbose_name='Краткая резолютивная часть судебного акта')
+    thrinst_minfin_information = models.CharField(max_length=255, blank=True, 
+    verbose_name='Информация о направлении справки по делу в ФК или Минфин V –отправлена, дата отправления и № письма, Х – не требуется')
+    thrinst_date_of_application_court_acts = models.DateField(blank=True, null=True, verbose_name='Дата направления заявления в суд на выдачу судебных актов.')
+    thrinst_date_of_receipt_acts = models.DateField(blank=True, null=True, verbose_name='Дата получения судебных актов.')
+
+    # Финал
+    date_of_appeal = models.CharField(max_length=255, blank=True, 
+    verbose_name='Дата направления кассационной жалобы в судебную коллегию ВС РФ (Х - не требуется) (1 кассация рассмотрена по существу (ГПК))') 
+    date_of_submission_appeal = models.CharField(max_length=255, blank=True, 
+    verbose_name='НАДЗОР Дата направления надзорной жалобы в президиум ВС РФ (Х - не требуется)')
+    total_amount_recovered = models.CharField(max_length=255, blank=True, verbose_name='ИТОГОВАЯ сумма взыскания')
+    information_about_need_recourse = models.CharField(max_length=255, blank=True, verbose_name='Инф-я о необходимости подачи регресса, надзорной жалобы, Комментарии')
+    summary_of_court =  models.CharField(max_length=255, blank=True, verbose_name='ИТОГ по делу')
+        
     def __str__(self):
         return f'{self.number_of_court} | {self.case_source_and_summ}' 
 
-
-class CourtFirstInstance(models.Model):
-    case_id = models.ForeignKey(CourtCases, on_delete=models.CASCADE)
-    dates_of_court_hearing = models.JSONField(blank=True)
-    date_of_dicision = models.DateField(blank=True, null=True)
-    brief_operative_part = models.TextField(blank=True)
-    minfin_information = models.CharField(max_length=255, blank=True)
-    date_of_filing_in_court = models.DateField(blank=True, null=True)
-    date_of_receipt_of_judgment = models.DateField(blank=True, null=True)
-    date_appeal_by_the_parties = models.DateField(blank=True, null=True)
-    date_appeal_to_the_court = models.DateField(blank=True, null=True)
-    is_finished = models.BooleanField(default=False)
-
-
-class CourtSecondInstance(models.Model):
-    case_id = models.ForeignKey(CourtCases, on_delete=models.CASCADE)
-    dates_of_court_hearing = models.JSONField(blank=True)
-    date_of_dicision = models.DateField(blank=True, null=True)
-    brief_operative_part = models.TextField(blank=True)
-    minfin_information = models.CharField(max_length=255, blank=True)
-    date_of_filing_in_court = models.DateField(blank=True, null=True)
-    date_of_receipt_of_judgment = models.DateField(blank=True, null=True)
-    date_appeal_by_the_parties = models.DateField(blank=True, null=True)
-    date_appeal_to_the_court = models.DateField(blank=True, null=True)
-    is_finished = models.BooleanField(default=False)
-
-
-class CourtThirdInstance(models.Model):
-    case_id = models.ForeignKey(CourtCases, on_delete=models.CASCADE)
-    date_of_judgment = models.DateField(blank=True, null=True)
-    brief_operative_part = models.TextField(blank=True)
-    minfin_information = models.CharField(max_length=255, blank=True)
-    date_of_application_court_acts = models.DateField(blank=True, null=True)
-    date_of_receipt_acts = models.DateField(blank=True, null=True)
-    is_finished = models.BooleanField(default=False)
-
-
 class NotifyTask(models.Model):
+    class Meta:
+        verbose_name = 'Задача на уведомление'
+        verbose_name_plural = 'Задачи на уведомления'
     court_id = models.ForeignKey(CourtCases, on_delete=models.CASCADE)
     notify_message = models.TextField()
     date_of_notify = models.DateField()

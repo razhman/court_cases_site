@@ -5,7 +5,25 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from .models import CourtCases, CourtFirstInstance, CourtSecondInstance, CourtThirdInstance, CustomUser, NotifyTask
+from .models import CourtCases, CustomUser, NotifyTask # CourtFirstInstance, CourtSecondInstance, CourtThirdInstance
+
+class CourtCasesAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Начало дела', {'fields': ('user_id', 'number_of_court', 'case_source_and_summ', 
+        'claim', 'number_case_in_first_instance', 'number_case_in_numenklature')}),
+        ('Первая инстанция', {'fields': ('fstinst_dates_of_court_hearing', 'fstinst_date_of_dicision', 
+        'fstinst_brief_operative_part', 'fstinst_minfin_information', 'fstinst_date_of_filing_in_court',
+        'fstinst_date_of_receipt_of_judgment',('fstinst_date_appeal_by_the_parties', 'fstinst_date_appeal_to_the_court')
+        )}),
+        ('Вторая инстанция', {'fields': ('sndinst_dates_of_court_hearing', 'sndinst_date_of_dicision',
+        'sndinst_brief_operative_part', 'sndinst_minfin_information', 'sndinst_date_of_filing_in_court',
+        'sndinst_date_of_receipt_of_judgment', ('sndinst_date_appeal_by_the_parties', 'sndinst_date_appeal_to_the_court'))}),
+        ('Третья инстанция', {'fields': ('thrinst_date_of_judgment', 'thrinst_brief_operative_part',
+        'thrinst_minfin_information','thrinst_date_of_application_court_acts', 'thrinst_date_of_receipt_acts')}),
+        ('Итоги', {'fields': ('date_of_appeal','date_of_submission_appeal','total_amount_recovered',
+        'information_about_need_recourse', 'summary_of_court')})
+    )
+    pass
 
 class UserAdmin(BaseUserAdmin):   
     # отображение
@@ -37,8 +55,8 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(CustomUser, UserAdmin)
 admin.site.unregister(Group)
-admin.site.register(CourtCases)
+admin.site.register(CourtCases, CourtCasesAdmin)
 admin.site.register(NotifyTask)
-admin.site.register(CourtFirstInstance)
-admin.site.register(CourtSecondInstance)
-admin.site.register(CourtThirdInstance)
+# admin.site.register(CourtFirstInstance)
+# admin.site.register(CourtSecondInstance)
+# admin.site.register(CourtThirdInstance)
