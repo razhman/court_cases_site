@@ -104,15 +104,15 @@ class CourtCases(models.Model):
 
 
     user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    number_of_court = models.FloatField(verbose_name='Номер дела')
+    number_of_court = models.FloatField(verbose_name='Номер дела', unique=True)
     case_source_and_summ = models.CharField(max_length=255, verbose_name='Кем заявлены требования и (сумма заявленных требований)')
     case_purpose = models.CharField(max_length=255, verbose_name='К кому заявлены требования + (3 лицо)')
     claim = models.CharField(max_length=255, verbose_name='Исковые требования')
-    number_case_in_first_instance = models.CharField(max_length=255, blank=True, verbose_name='N дела в суде первой инстанции')
-    number_case_in_numenklature = models.CharField(max_length=255, blank=True, verbose_name='N дела по внутренней номенклатуре')
+    number_case_in_first_instance = models.CharField(max_length=255, verbose_name='N дела в суде первой инстанции')
+    number_case_in_numenklature = models.CharField(max_length=255, verbose_name='N дела по внутренней номенклатуре')
 
     # Первая инстанция
-    fstinst_dates_of_court_hearing = models.JSONField(blank=True, verbose_name='Даты судебных заседаний')
+    fstinst_dates_of_court_hearing = models.JSONField(blank=True, null=True, verbose_name='Даты судебных заседаний')
     fstinst_date_of_dicision = models.DateField(blank=True, null=True, verbose_name='Дата вынесения решения(только дата)')
     fstinst_brief_operative_part = models.TextField(blank=True, verbose_name='Краткая резолютивная часть судебного акта')
     fstinst_minfin_information = models.CharField(max_length=255, blank=True, 
@@ -122,7 +122,7 @@ class CourtCases(models.Model):
     fstinst_date_appeal_by_the_parties = models.DateField(blank=True, null=True, verbose_name='Дата направления апелляционной жалобы сторонам по делу')
     fstinst_date_appeal_to_the_court = models.DateField(blank=True, null=True, verbose_name='Дата направления апелляционной жалобы в суд')
     # Вторая инстанция
-    sndinst_dates_of_court_hearing = models.JSONField(blank=True, verbose_name='Даты судебных заседаний')
+    sndinst_dates_of_court_hearing = models.JSONField(blank=True, null=True, verbose_name='Даты судебных заседаний')
     sndinst_date_of_dicision = models.DateField(blank=True, null=True, verbose_name='Дата вынесения апелляционного определения')
     sndinst_brief_operative_part = models.TextField(blank=True, verbose_name='Краткая резолютивная часть судебного акта')
     sndinst_minfin_information = models.CharField(max_length=255, blank=True, 

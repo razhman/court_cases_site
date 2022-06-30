@@ -18,12 +18,10 @@ from django.urls import path, include
 from rest_framework import routers
 import courts.views as views
 
-router = routers.DefaultRouter()
-router.register(r'users', views.CustomUserViewSet)
-router.register(r'court_cases', views.CourtCasesViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('users/',views.get_users,name='users'),
+    path('courts/',views.get_courts,name='courts'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 
