@@ -23,8 +23,10 @@ import courts.views as views
 urlpatterns = [
     path('users/',views.get_users,name='users'),
     path('courts/',views.get_courts,name='courts'),
-    path('courts/<str:pk>/', views.get_court_details, name='courts-detail'),
-    path('courts/<str:pk>/update/', views.update_court, name='courts-update'),
+    path('courts/create/', views.create_court, name='create-court'),
+    path('courts/<str:pk>/', views.get_court_details, name='court-detail'),
+    path('courts/<str:pk>/update/', views.update_court, name='court-update'),
+    path('courts/<str:pk>/delete/', views.del_court_by_id, name='court-delete'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('admin/', admin.site.urls),

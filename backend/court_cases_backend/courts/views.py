@@ -8,6 +8,7 @@ from .serializers import CourtCasesSerializer, CustomUserSerializer
 from .models import CustomUser, CourtCases
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def get_users(request):
     queryset = CustomUser.objects.all()
@@ -16,6 +17,7 @@ def get_users(request):
     return Response(serializer_class.data)
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_courts(request):
     user = request.user
@@ -30,6 +32,7 @@ def get_courts(request):
     return Response(serializer_class.data)
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_court_details(request, pk):
     user = request.user
@@ -44,7 +47,6 @@ def get_court_details(request, pk):
 
 
     return Response(serializer_class.data)
-
 
 @api_view(['PUT'])
 @authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
@@ -69,3 +71,37 @@ def update_court(request, pk):
         serializer_class = CourtCasesSerializer(court, many=False)
 
         return Response(serializer_class.data)
+    
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_court(request):
+    user = request.user
+    data = request.data
+
+    print({**data, "user_id":user.id})
+
+    court = CourtCases.objects.create(**{**data, "user_id":user})
+    
+    serializer_class = CourtCasesSerializer(court, many=False)
+
+    return Response(serializer_class.data)
+
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def del_court_by_id(request, pk):
+    print(pk)
+    user = request.user
+
+    court = CourtCases.objects.get(id=pk)
+
+    serializer_class = CourtCasesSerializer(court, many=False)
+    
+    if user.is_admin is False and serializer_class.data['user_id'] != user.id:
+        content = {'detail': 'You have no permissions to delete this court'}
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        court.delete()
+
+        return Response("Court was deleted")
