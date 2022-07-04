@@ -16,13 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 import courts.views as views
 
 
 urlpatterns = [
     path('users/',views.get_users,name='users'),
     path('courts/',views.get_courts,name='courts'),
+    path('courts/<str:pk>/', views.get_court_details, name='courts-detail'),
+    path('courts/<str:pk>/update/', views.update_court, name='courts-update'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('admin/', admin.site.urls),
 
 ]

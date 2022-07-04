@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+from rest_framework.authtoken.models import Token
 
 from .models import CourtCases, CustomUser, NotifyTask # CourtFirstInstance, CourtSecondInstance, CourtThirdInstance
 
@@ -57,6 +58,7 @@ admin.site.register(CustomUser, UserAdmin)
 admin.site.unregister(Group)
 admin.site.register(CourtCases, CourtCasesAdmin)
 admin.site.register(NotifyTask)
+# admin.site.register(Token)
 # admin.site.register(CourtFirstInstance)
 # admin.site.register(CourtSecondInstance)
 # admin.site.register(CourtThirdInstance)

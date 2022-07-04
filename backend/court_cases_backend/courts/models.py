@@ -152,6 +152,8 @@ class CourtCases(models.Model):
     def __str__(self):
         return f'{self.number_of_court} | {self.case_source_and_summ}' 
 
+    
+
 class NotifyTask(models.Model):
     class Meta:
         verbose_name = 'Задача на уведомление'
