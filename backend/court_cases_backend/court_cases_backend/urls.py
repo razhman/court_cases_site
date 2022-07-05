@@ -22,11 +22,13 @@ import courts.views as views
 
 urlpatterns = [
     path('users/',views.get_users,name='users'),
+    path('users/current-detail/',views.get_current_user_info,name='user_info'),
+    path('users/<str:pk>/',views.get_user_by_id,name='user_by_id_detail'),
     path('courts/',views.get_courts,name='courts'),
-    path('courts/create/', views.create_court, name='create-court'),
-    path('courts/<str:pk>/', views.get_court_details, name='court-detail'),
-    path('courts/<str:pk>/update/', views.update_court, name='court-update'),
-    path('courts/<str:pk>/delete/', views.del_court_by_id, name='court-delete'),
+    path('courts/create/', views.create_court, name='create_court'),
+    path('courts/<str:pk>/', views.get_court_details, name='court_detail'),
+    path('courts/<str:pk>/update/', views.update_court, name='court_update'),
+    path('courts/<str:pk>/delete/', views.del_court_by_id, name='court_delete'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('admin/', admin.site.urls),
