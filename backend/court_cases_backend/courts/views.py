@@ -19,6 +19,25 @@ def get_users(request):
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+def get_current_user_info(request):
+    user = request.user
+    queryset = CustomUser.objects.get(id=user.id)
+    serializer_class = CustomUserSerializer(queryset, many=False)
+    
+    return Response(serializer_class.data)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def get_user_by_id(request, pk):
+    queryset = CustomUser.objects.get(id=pk)
+    serializer_class = CustomUserSerializer(queryset, many=False)
+    
+    return Response(serializer_class.data)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_courts(request):
     user = request.user
 
